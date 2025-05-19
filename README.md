@@ -53,7 +53,7 @@ SJPHire/
    ```bash
    git clone https://github.com/your-username/SJPHire.git
    cd SJPHire
-````
+   ```
 
 2. **Configure the database (optional)**
    Edit `src/main/resources/application.properties`:
