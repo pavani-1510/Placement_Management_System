@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Jobs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+        }
+        th, td {
+            text-align: center;
+        }
+        .home-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Job Listings</h1>
+        <button class="btn btn-primary home-btn" onclick="window.location.href='/recruiterDashboard.html'">Go to Home</button>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Job ID (SID)</th>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Salary</th>
+                    <th>Date Posted</th>
+                    <th>Job Type</th>
+                    <th>Experience Required</th>
+                    <th>Skills</th>
+                    <th>Job Description</th>
+                    <th>Contact Email</th>
+                </tr>
+            </thead>
+            <tbody id="jobsTableBody">
+                <!-- Job data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch the jobs data from the backend
+            fetch('/api/jobsr')  // Make sure this URL corresponds to your backend endpoint
+                .then(response => response.json())
+                .then(data => {
+                    const jobsTableBody = document.getElementById('jobsTableBody');
+                    jobsTableBody.innerHTML = '';  // Clear existing rows
+
+                    data.forEach(job => {
+                        const row = jobsTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${job.sid}</td>
+                            <td>${job.sname}</td>
+                            <td>${job.companyName}</td>
+                            <td>${job.position}</td>
+                            <td>${job.department}</td>
+                            <td>${job.location}</td>
+                            <td>${job.salary}</td>
+                            <td>${new Date(job.datePosted).toLocaleDateString()}</td>
+                            <td>${job.jobType}</td>
+                            <td>${job.experienceRequired}</td>
+                            <td>${job.skills}</td>
+                            <td>${job.jobDescription}</td>
+                            <td>${job.contactEmail}</td>
+                        `;
+                    });
+                })
+                .catch(error => console.error('Error fetching jobs:', error));
+        });
+    </script>
+</body>
+</html>

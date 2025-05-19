@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applications</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f4f8;
+      color: #333;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+    .home-button {
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .home-button:hover {
+      background-color: #dff0d8;
+    }
+    #applications-list {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .application {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+    .application:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .application strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #4CAF50;
+    }
+    .application .field {
+      margin: 5px 0;
+    }
+    .application a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    .application a:hover {
+      text-decoration: underline;
+    }
+    p {
+      text-align: center;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Applications</h1>
+    <a href="index.html" class="home-button">Home</a>
+  </header>
+  <div id="applications-list"></div>
+
+  <script>
+    // Fetch all applications from the /api/applications endpoint
+    fetch('/api/allapplications')
+      .then(response => response.json()) // Parse the JSON response
+      .then(applications => {
+        const applicationsListDiv = document.getElementById('applications-list');
+        if (applications.length > 0) {
+          applications.forEach(app => {
+            const appDiv = document.createElement('div');
+            appDiv.classList.add('application');
+            appDiv.innerHTML = `
+              <strong>Application Details</strong>
+              <div class="field"><strong>Full Name:</strong> ${app.fullName}</div>
+              <div class="field"><strong>SID:</strong> ${app.sid}</div>
+              <div class="field"><strong>Mobile Number:</strong> ${app.mobileNumber}</div>
+              <div class="field"><strong>Email ID:</strong> ${app.emailId}</div>
+              <div class="field"><strong>Gender:</strong> ${app.gender}</div>
+              <div class="field"><strong>Resume:</strong> <a href="${app.resume}" target="_blank">View</a></div>
+              <div class="field"><strong>CGPA:</strong> ${app.cgpa}</div>
+              <div class="field"><strong>Status:</strong> ${app.status}</div>
+            `;
+            applicationsListDiv.appendChild(appDiv);
+          });
+        } else {
+          applicationsListDiv.innerHTML = '<p>No applications found.</p>';
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching applications:", error);
+        document.getElementById('applications-list').innerHTML = '<p>Unable to load applications. Please try again later.</p>';
+      });
+  </script>
+</body>
+</html>

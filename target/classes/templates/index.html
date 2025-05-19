@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/jpg" href="https://i.pinimg.com/736x/a3/25/df/a325dff4a20e92056f916fccee63cef9.jpg"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #fff7e6 50%, #ffffff 100%);
+        }
+        .sidebar {
+            background-color: #343a40;
+            color: white;
+            min-height: 100vh;
+            width: 200px;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+        .sidebar img {
+            width: 120px; /* Increased size of the image */
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .content {
+            margin-left: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+        .row {
+            width: 100%;
+            max-width: 900px;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+            margin-bottom: 20px;
+        }
+        .card h5 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .card a {
+            background-color: #007bff; /* Blue button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .card a:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="https://i.pinimg.com/736x/a3/25/df/a325dff4a20e92056f916fccee63cef9.jpg" alt="Logo">
+        <a href="#">Student Login</a>
+        <a href="#">Admin Login</a>
+        <a href="#">Employer Login</a>
+        <a href="#">Contact Us</a>
+    </div>
+    <div class="content">
+        <div class="row">
+            <!-- Student Login -->
+            <div class="col-md-6">
+                <div class="card">
+                    <h5>Student Login</h5>
+                    <p>Access the student portal for managing profiles and applications.</p>
+                    <a href="login.html">Login</a>
+                </div>
+            </div>
+            <!-- Student Signup -->
+            <div class="col-md-6">
+                <div class="card">
+                    <h5>Student Signup</h5>
+                    <p>Sign up to create a student account and start your journey.</p>
+                    <a href="signup.html">Signup</a>
+                </div>
+            </div>
+            <!-- Recruiter Login -->
+            <div class="col-md-6">
+                <div class="card">
+                    <h5>Recruiter Login</h5>
+                    <p>Access the employer portal to post job openings and view applications.</p>
+                    <a href="recruiterLogin.html">Login</a>
+                </div>
+            </div>
+            <!-- Admin Login -->
+            <div class="col-md-6">
+                <div class="card">
+                    <h5>Admin Login</h5>
+                    <p>Access the admin dashboard to manage users and job postings.</p>
+                    <a href="adminLogin.html">Login</a>
+                </div>
+            </div>
+            
+            <!-- Contact Us -->
+            <div class="col-md-6">
+                <div class="card">
+                    <h5>Contact Us</h5>
+                    <p>Have any questions? Get in touch with us for support and inquiries.</p>
+                    <a href="contact_us.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        2024 &copy; Home Page
+    </footer>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7fc; /* Light gray-blue background */
+            font-family: 'Open Sans', sans-serif;
+            padding-bottom: 40px;
+            animation: fadeInBody 1s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            margin-top: 50px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2575fc;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 5px rgba(37, 117, 252, 0.3);
+        }
+
+        button[type="submit"] {
+            background-color: #2575fc;
+            color: white;
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            border-radius: 8px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #6a11cb;
+            transform: scale(1.05);
+        }
+
+        .form-control:focus + .form-control-feedback {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-group .form-control-feedback {
+            visibility: hidden;
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .form-group select {
+            appearance: none;
+            padding-right: 30px;
+        }
+
+        /* Floating labels */
+        .form-control-label {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 0.9rem;
+            color: #2575fc;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus ~ .form-control-label,
+        .form-control:not(:placeholder-shown) ~ .form-control-label {
+            opacity: 1;
+            top: -35px;
+            font-size: 0.85rem;
+        }
+
+        .home-btn {
+            background-color: #6a11cb;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 30px;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background-color: #2575fc;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Apply for Job</h2>
+        <form id="jobApplicationForm">
+            <!-- Username will be fetched from the session and set dynamically -->
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required readonly>
+            </div>
+
+            <!-- Job ID (sid) will be passed from the query parameter -->
+            <input type="hidden" id="sid" name="sid">
+
+            <!-- Other form fields -->
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" class="form-control" id="fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number:</label>
+                <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="emailId">Email ID:</label>
+                <input type="email" class="form-control" id="emailId" name="emailId" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select class="form-control" id="gender" name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="resume">Resume (Google Drive Link):</label>
+                <input type="url" class="form-control" id="resume" name="resume" placeholder="Enter Google Drive link" required>
+            </div>
+            <div class="form-group">
+                <label for="cgpa">CGPA:</label>
+                <input type="number" step="0.01" class="form-control" id="cgpa" name="cgpa" required>
+            </div>
+            <input type="hidden" name="status" value="Pending">
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+
+        <a href="/dashboard.html" class="home-btn">Back to Dashboard</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get job ID (sid) from query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const sid = urlParams.get('sid');
+            document.getElementById('sid').value = sid;
+
+            // Fetch username from session (or authentication context)
+            document.getElementById('username').value = sessionStorage.getItem('username'); // Or replace with backend session
+
+            // Handle form submission
+            document.getElementById("jobApplicationForm").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const formData = new FormData(event.target);
+                const jsonData = Object.fromEntries(formData.entries());
+
+                fetch("/api/apply", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Application submitted successfully!");
+                        window.location.href = "dashboard.html";
+                    } else {
+                        response.text().then(text => alert(`Error: ${text}`));
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    </script>
+</body>
+</html>

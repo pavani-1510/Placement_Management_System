@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #analysisSummary {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        #analysisSummary p {
+            margin: 10px 0;
+        }
+        #analysisSummary strong {
+            font-weight: bold;
+        }
+        canvas {
+            max-width: 100%;
+            margin-top: 30px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Job Application Analysis</h1>
+    </header>
+    
+    <div class="container">
+        <div id="analysisSummary">
+            <!-- Summary will be populated here -->
+            <p>Total Applications Submitted: <strong>0</strong></p>
+            <p>Applications Applied: <strong>0</strong></p>
+            <p>Applications Accepted: <strong>0</strong></p>
+        </div>
+        
+        <canvas id="analysisChart"></canvas>
+
+        <button class="btn" onclick="logout()">Logout</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Job Application Tracker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch jobs and user applications using the fetch API
+            fetchJobsAndApplications();
+
+            // Fetch job and application data
+            function fetchJobsAndApplications() {
+                // Get username from sessionStorage
+                const username = sessionStorage.getItem('username');
+                
+                if (username) {
+                    // Fetch application status summary data (Applied vs Accepted)
+                    fetch(`/api/applications/status-summary?username=${username}`)
+                        .then(response => response.json())
+                        .then(statusSummary => {
+                            // Extract 'Total Applied' and 'Total Accepted' from the status summary
+                            const totalApplied = statusSummary["Total Applied"] || 0;
+                            const totalAccepted = statusSummary["Total Accepted"] || 0;
+
+                            // Update Analysis Summary
+                            const analysisSummary = document.getElementById('analysisSummary');
+                            analysisSummary.innerHTML = `
+                                <p>Total Applications Submitted: <strong>${totalApplied + totalAccepted}</strong></p>
+                                <p>Applications Applied: <strong>${totalApplied}</strong></p>
+                                <p>Applications Accepted: <strong>${totalAccepted}</strong></p>
+                            `;
+
+                            // Create Jobs vs Applications Chart (Pie Chart)
+                            const analysisChartCtx = document.getElementById('analysisChart').getContext('2d');
+                            new Chart(analysisChartCtx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Total Applied', 'Total Accepted'],
+                                    datasets: [{
+                                        data: [totalApplied, totalAccepted],
+                                        backgroundColor: ['#007bff', '#28a745'],
+                                        hoverBackgroundColor: ['#0056b3', '#1e7e34']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(tooltipItem) {
+                                                    const dataset = tooltipItem.dataset.data;
+                                                    const total = dataset.reduce((acc, value) => acc + value, 0);
+                                                    const value = dataset[tooltipItem.dataIndex];
+                                                    const percentage = ((value / total) * 100).toFixed(2);
+                                                    return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error fetching data: ", error);
+                            alert("There was an issue fetching the job or application data.");
+                        });
+                } else {
+                    alert("Session expired. Please log in again.");
+                    window.location.href = '/index.html';
+                }
+            }
+        });
+
+        // Logout function to clear sessionStorage
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = '/index.html';  // Redirect to login page
+        }
+    </script>
+</body>
+</html>

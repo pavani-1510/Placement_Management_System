@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Application</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+
+        #applicationDetails {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .text-danger {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Track Your Application Status</h2>
+        <form id="statusForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Track Status</button>
+        </form>
+
+        <div id="applicationDetails">
+            <h3>Application Details:</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Mobile Number</th>
+                        <th>Email ID</th>
+                        <th>Gender</th>
+                        <th>12th Mark Sheet Link</th>
+                        <th>Branch</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationBody">
+                    <!-- Application details will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <p id="statusMessage" class="text-danger"></p>
+            <a href="dashboard.html" class="btn btn-primary btn-custom btn-block">Home</a>
+    </div>
+
+    <script>
+        // Simulated application data
+        var applicationData = [
+            {
+                username: "john_doe",
+                fullName: "John Doe",
+                mobileNumber: "1234567890",
+                emailId: "john.doe@example.com",
+                gender: "Male",
+                twelfthMarkSheetLink: "https://example.com/john_doe_marksheet.pdf",
+                branch: "Computer Science",
+                status: "Accepted"
+            },
+            {
+                username: "jane_smith",
+                fullName: "Jane Smith",
+                mobileNumber: "0987654321",
+                emailId: "jane.smith@example.com",
+                gender: "Female",
+                twelfthMarkSheetLink: "https://example.com/jane_smith_marksheet.pdf",
+                branch: "Mechanical Engineering",
+                status: "Pending"
+            }
+            // Add more sample users as needed
+        ];
+
+        document.getElementById('statusForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var username = document.getElementById('username').value.trim();
+            var table = document.getElementById('applicationDetails');
+            var tbody = document.getElementById('applicationBody');
+            tbody.innerHTML = '';  // Clear any previous results
+
+            if (username === "") {
+                document.getElementById('statusMessage').innerText = 'Username is required.';
+                table.style.display = 'none';
+                return;
+            }
+
+            // Simulate searching for the user in the mock data
+            var foundApplication = applicationData.find(function(app) {
+                return app.username === username;
+            });
+
+            if (foundApplication) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${foundApplication.username}</td>
+                    <td>${foundApplication.fullName}</td>
+                    <td>${foundApplication.mobileNumber}</td>
+                    <td>${foundApplication.emailId}</td>
+                    <td>${foundApplication.gender}</td>
+                    <td><a href="${foundApplication.twelfthMarkSheetLink}" target="_blank">View</a></td>
+                    <td>${foundApplication.branch}</td>
+                    <td>${foundApplication.status}</td>
+                `;
+                tbody.appendChild(row);
+                table.style.display = 'table';
+                document.getElementById('statusMessage').innerText = '';
+            } else {
+                document.getElementById('statusMessage').innerText = 'No application found for this username.';
+                table.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+

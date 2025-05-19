@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #343a40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            background: #FF9EAA;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin: 0;
+            color: #007bff;
+        }
+        .welcome {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .button, .btn-danger {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            font-size: 18px;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .button {
+            background-color: #007bff;
+            border: none;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Your Dashboard</h1>
+        </div>
+        <div class="content">
+            <div id="username" class="welcome">Hello, </div>
+            <p>Here, you can easily explore available job listings, submit applications, and monitor the status of your ongoing applications. Everything you need to manage your job search effectively is right at your fingertips.</p>
+
+            <form action="retrieve.html" style="display: inline;">
+                <button type="submit" class="button">View Jobs</button>
+            </form>
+            <a href="applications.html" class="btn btn-primary">View My Applications</a>
+            
+            <a href="contact_us.html" class="button">Contact Us</a>
+            <a href="index.html" class="btn btn-danger" onclick="logout()">Logout</a>
+
+            <h3>Applications Summary</h3>
+            <div id="applications-summary">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Assuming you're storing the username in sessionStorage
+            const username = sessionStorage.getItem('username');
+            
+            if (username) {
+                // Fetch applications from backend API
+                fetch(`/api/applications?username=${username}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Process and display the data
+                        if (data.length === 0) {
+                            document.getElementById('applications-summary').innerHTML = 'No applications found.';
+                        } else {
+                            let summary = `
+                                <p>Total applications submitted: ${data.length}</p>
+                                <ul>
+                            `;
+                            data.forEach(application => {
+                                summary += `<li>${application.jobTitle} at ${application.companyName} - Status: ${application.applicationStatus}</li>`;
+                            });
+                            summary += '</ul>';
+                            document.getElementById('applications-summary').innerHTML = summary;
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('applications-summary').innerHTML = 'Error loading applications.';
+                        console.error('Error fetching applications:', error);
+                    });
+            } else {
+                alert("Session expired. Please log in again.");
+                window.location.href = '/index.html';
+            }
+        });
+
+        function logout() {
+            sessionStorage.clear();
+        }
+    </script>
+</body>
+</html>

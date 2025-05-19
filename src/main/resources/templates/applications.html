@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applications</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e8f5e9; /* Light green background */
+      color: #333;
+    }
+    header {
+      background-color: #3f51b5; /* Indigo header */
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+    .home-button {
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #3f51b5;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .home-button:hover {
+      background-color: #c5cae9; /* Lighter shade of indigo */
+    }
+    #applications-list {
+      padding: 30px;
+      max-width: 900px;
+      margin: 30px auto;
+    }
+    .application {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #b0bec5; /* Light grey border */
+      border-radius: 8px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .application:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .application strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #3f51b5; /* Indigo text color */
+      font-size: 1.1em;
+    }
+    .application .field {
+      margin: 5px 0;
+      font-size: 1.1em;
+    }
+    .application a {
+      color: #0288d1; /* Blue link color */
+      text-decoration: none;
+    }
+    .application a:hover {
+      text-decoration: underline;
+    }
+    p {
+      text-align: center;
+      color: #555;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #c8e6c9; /* Light green footer */
+      margin-top: 30px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Applications</h1>
+    <a href="index.html" class="home-button">Home</a>
+  </header>
+
+  <div id="applications-list"></div>
+
+  <footer>
+    <p>&copy; 2024 Job Application Tracker. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Step 1: Get the username from sessionStorage
+    const username = sessionStorage.getItem('username');
+
+    // Step 2: Fetch applications from the /api/applications endpoint
+    if (username) {
+      fetch(`/api/applications?username=${username}`)
+        .then(response => response.json()) // Parse the JSON response
+        .then(applications => {
+          const applicationsListDiv = document.getElementById('applications-list');
+          if (applications.length > 0) {
+            applications.forEach(app => {
+              const appDiv = document.createElement('div');
+              appDiv.classList.add('application');
+              appDiv.innerHTML = `
+                <strong>Application Details</strong>
+                <div class="field"><strong>Full Name:</strong> ${app.fullName}</div>
+                <div class="field"><strong>SID:</strong> ${app.sid}</div>
+                <div class="field"><strong>Mobile Number:</strong> ${app.mobileNumber}</div>
+                <div class="field"><strong>Email ID:</strong> ${app.emailId}</div>
+                <div class="field"><strong>Gender:</strong> ${app.gender}</div>
+                <div class="field"><strong>Resume:</strong> <a href="${app.resume}" target="_blank">View</a></div>
+                <div class="field"><strong>CGPA:</strong> ${app.cgpa}</div>
+                <div class="field"><strong>Status:</strong> ${app.status}</div>
+              `;
+              applicationsListDiv.appendChild(appDiv);
+            });
+          } else {
+            applicationsListDiv.innerHTML = '<p>No applications found for this username.</p>';
+          }
+        })
+        .catch(error => console.error("Error fetching applications:", error));
+    } else {
+      document.getElementById('applications-list').innerHTML = '<p>No username found in session storage.</p>';
+    }
+  </script>
+</body>
+</html>

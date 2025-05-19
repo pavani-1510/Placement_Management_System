@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('bg4.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+        }
+        .signup-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .signup-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .invalid-feedback {
+            display: none;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Signup</h1>
+        <form id="signupForm" onsubmit="return validateForm()" method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="number">Mobile Number:</label>
+                <input type="text" class="form-control" id="number" name="number" pattern="^\d{10}$" title="Mobile number must be exactly 10 digits." required>
+                <div class="invalid-feedback" id="numberFeedback">
+                    Mobile number must be exactly 10 digits.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Enter Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+                <div class="invalid-feedback" id="passwordFeedback">
+                    Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                <div class="invalid-feedback" id="confirmPasswordFeedback">
+                    Passwords do not match.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sname">Student Name:</label>
+                <input type="text" class="form-control" id="sname" name="sname" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Signup</button>
+        </form>
+    </div>
+    <script>
+        function validateForm() {
+            const number = document.getElementById('number').value.trim();
+            const numberFeedback = document.getElementById('numberFeedback');
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const passwordFeedback = document.getElementById('passwordFeedback');
+            const confirmPasswordFeedback = document.getElementById('confirmPasswordFeedback');
+
+            // Reset feedback messages
+            numberFeedback.style.display = 'none';
+            passwordFeedback.style.display = 'none';
+            confirmPasswordFeedback.style.display = 'none';
+
+            let isValid = true;
+
+            // Validate mobile number
+            if (!/^\d{10}$/.test(number)) {
+                numberFeedback.style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate password criteria
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordPattern.test(password)) {
+                passwordFeedback.style.display = 'block';
+                isValid = false;
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                confirmPasswordFeedback.style.display = 'block';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return false; // Prevent form submission
+            }
+
+            // Proceed with form submission using Fetch API
+            const formData = new FormData(document.getElementById('signupForm'));
+                    window.location.href = "login.html";
+            fetch('/api/signup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                
+                    alert(data.message || "Signup failed. Please try again.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+            return false; // Prevent the default form submission
+        }
+    </script>
+</body>
+</html>
