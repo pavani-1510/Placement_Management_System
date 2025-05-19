@@ -113,6 +113,3 @@ Developed by \Pavani R
 📧 Contact: [
 pavanikangundi@gmail.com](mailto:pavanikangundi@gmail.com)
 🌐 GitHub: [pavani-1510](https://github.com/pavani-1510)
-
----
-pavanikangundi@gmail.com
